@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
+  <title>Gallery - Studio 5D Photography</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <meta property="og:title" content="Gallery - Studio 5D Photography">
+  <meta property="og:image" content="img/0O5A6563.JPG">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="gallery">
+    <div class="gallery-header">
+      <div class="header-top">
+        <img src="img/logo.png" alt="Studio 5D Photography Logo" class="header-logo">
+        <h1>Gallery</h1>
+      </div>
+      <div class="selection-info">
+        <span id="selection-count">Selected: 0</span>
+        <button id="view-selected-btn" class="view-selected-btn">View Selected Photos</button>
+      </div>
+    </div>
+
+    <div id="gallery-grid" class="gallery-grid">
+      <!-- Images will be loaded here -->
+    </div>
+
+    <div class="footer">
+      <p>Studio 5D Photography | <a href="https://www.instagram.com/studio5dnig" target="_blank">Follow us on Instagram</a></p>
+    </div>
+  </div>
+
+  <!-- Audio element for gallery selection music -->
+  <audio id="selection-music" loop volume="1.0">
+    <source src="music/selection-background.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Modal for enlarged image -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <img id="modal-img" src="" alt="">
+      <div id="modal-number" class="modal-number"></div>
+    </div>
+  </div>
+
+  <script src="images.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
