@@ -1,5 +1,74 @@
 // script.js
 
+// Document-level download prevention
+const downloadPrevention = {
+  init() {
+    this.preventImageSaving();
+    this.preventDragDrop();
+    this.preventKeyboardShortcuts();
+    this.preventCopyPaste();
+  },
+  
+  preventImageSaving() {
+    // Disable right-click on images
+    document.addEventListener('contextmenu', (e) => {
+      if (e.target.tagName === 'IMG' || e.target.closest('.gallery-item')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  },
+  
+  preventDragDrop() {
+    // Prevent dragging images
+    document.addEventListener('dragstart', (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return false;
+      }
+    });
+    
+    // Prevent dropping images
+    document.addEventListener('drop', (e) => {
+      const dataTransfer = e.dataTransfer;
+      if (dataTransfer && dataTransfer.types && dataTransfer.types.includes('Files')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+    
+    document.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+  },
+  
+  preventKeyboardShortcuts() {
+    // Prevent Ctrl+S (Save)
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        return false;
+      }
+      // Prevent Ctrl+A (Select All)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+        e.preventDefault();
+        return false;
+      }
+    });
+  },
+  
+  preventCopyPaste() {
+    // Prevent copying images
+    document.addEventListener('copy', (e) => {
+      const selectedElement = document.activeElement;
+      if (selectedElement && selectedElement.tagName === 'IMG') {
+        e.preventDefault();
+        return false;
+      }
+    });
+  }
+};
+
 // Screenshot Blocking for Mobile Devices (Android & iPhone)
 const screenshotBlocker = {
   isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
@@ -90,7 +159,7 @@ const screenshotBlocker = {
       
       img.style.webkitUserSelect = 'none';
       img.style.userSelect = 'none';
-      img.style.pointerEvents = 'none';
+      img.style.pointerEvents = 'auto';
       img.draggable = false;
     });
   },
@@ -150,8 +219,9 @@ const musicManager = {
 
 // Setup music toggle button
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize screenshot blocking for mobile devices
+  // Initialize all protection systems
   screenshotBlocker.init();
+  downloadPrevention.init();
   
   const musicToggle = document.getElementById('music-toggle');
   if (musicToggle) {
@@ -205,7 +275,8 @@ if (document.getElementById('gallery-grid')) {
   const modal = document.getElementById('modal');
   const modalImg = document.getElementById('modal-img');
   const modalNumber = document.getElementById('modal-number');
-  const close = document.querySelector('.close');
+  const close = document.querySelector('.modal-close');
+  const modalBackdrop = document.querySelector('.modal-backdrop');
   const selectionMusic = document.getElementById('selection-music');
 
   let selected = JSON.parse(localStorage.getItem('selectedImages') || '[]');
@@ -216,7 +287,7 @@ if (document.getElementById('gallery-grid')) {
   }
 
   function updateSelectionCount() {
-    selectionCount.textContent = `Selected: ${selected.length}`;
+    selectionCount.textContent = selected.length;
   }
 
   function renderGallery() {
@@ -225,20 +296,26 @@ if (document.getElementById('gallery-grid')) {
       const item = document.createElement('div');
       item.className = 'gallery-item';
       item.innerHTML = `
-        <img src="${img.path}" alt="${img.name}" loading="lazy" oncontextmenu="return false" ondragstart="return false">
+        <img src="${img.path}" alt="${img.name}" loading="lazy" oncontextmenu="return false" ondragstart="return false" style="user-select: none; -webkit-user-drag: none;">
         <div class="image-number">${img.number}</div>
         <button class="select-btn ${selected.includes(img.number) ? 'selected' : ''}" data-number="${img.number}">
           ${selected.includes(img.number) ? 'Selected' : 'Select'}
         </button>
-        <div class="watermark">Studio 5D Photography</div>
+        <div class="watermark">Belamay © - Not for Download</div>
       `;
       galleryGrid.appendChild(item);
 
       // Event listeners
       item.querySelector('img').addEventListener('click', () => {
         modalImg.src = img.path;
-        modalNumber.textContent = img.number;
+        modalNumber.textContent = `Image #${img.number}`;
         modal.style.display = 'flex';
+        
+        // Protect modal image from downloads
+        modalImg.oncontextmenu = () => false;
+        modalImg.ondragstart = () => false;
+        modalImg.style.userSelect = 'none';
+        modalImg.style.webkitUserDrag = 'none';
         
         // Play the music for this specific image if available
         if (img.music) {
@@ -279,13 +356,11 @@ if (document.getElementById('gallery-grid')) {
     }
   });
 
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-      // Resume gallery background music
-      if (selectionMusic && !musicManager.isMuted) {
-        musicManager.playSoundtrack('selection-music', 'music/selection-background.mp3');
-      }
+  modalBackdrop.addEventListener('click', () => {
+    modal.style.display = 'none';
+    // Resume gallery background music
+    if (selectionMusic && !musicManager.isMuted) {
+      musicManager.playSoundtrack('selection-music', 'music/selection-background.mp3');
     }
   });
 }
