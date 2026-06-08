@@ -238,12 +238,13 @@ if (document.getElementById('intro')) {
   const introMusic = document.getElementById('intro-music');
 
   function updateImage() {
-    if (images.length > 0) {
+    if (images && images.length > 0) {
       introImg.src = images[currentSlide].path;
     }
   }
 
   function nextSlide() {
+    if (!images || !images.length) return;
     currentSlide = (currentSlide + 1) % images.length;
     updateImage();
   }
@@ -257,9 +258,11 @@ if (document.getElementById('intro')) {
 
   setInterval(nextSlide, 3000);
 
-  enterBtn.addEventListener('click', () => {
-    window.location.href = 'gallery.html';
-  });
+  if (enterBtn) {
+    enterBtn.addEventListener('click', () => {
+      window.location.href = 'gallery.html';
+    });
+  }
 
   // Auto enter after 8 seconds
   setTimeout(() => {

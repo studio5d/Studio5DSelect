@@ -51,6 +51,83 @@ img {
   -webkit-filter: none;
 }
 
+.intro {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.intro-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.92;
+  filter: brightness(0.55);
+  z-index: 1;
+}
+
+.intro-content {
+  max-width: 680px;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  letter-spacing: -0.05em;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+}
+
+.tagline {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.84);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.enter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border: 2px solid rgba(0, 217, 255, 0.75);
+  border-radius: 999px;
+  background: rgba(0, 217, 255, 0.16);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  pointer-events: auto;
+}
+
+.enter-btn:hover,
+.enter-btn:focus {
+  background: rgba(0, 217, 255, 0.28);
+  border-color: rgba(0, 217, 255, 1);
+  transform: translateY(-2px);
+}
+
 /* ==================== ANIMATIONS ==================== */
 @keyframes slideInDown {
   from {
